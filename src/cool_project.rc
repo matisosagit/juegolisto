@@ -1,0 +1,27 @@
+GLFW_ICON ICON "cool_project.ico"
+
+1 VERSIONINFO
+FILEVERSION     1,0,0,0
+PRODUCTVERSION  1,0,0,0
+BEGIN
+  BLOCK "StringFileInfo"
+  BEGIN
+	//BLOCK "080904E4" 	// English UK
+    BLOCK "040904E4"	// English US
+    BEGIN
+	  VALUE "CompanyName", "raylibtech"
+      VALUE "FileDescription", "Cool Project | my cool new project"
+      VALUE "FileVersion", "1.0"
+      VALUE "InternalName", "cool_project"
+      VALUE "LegalCopyright", "(c) 2024 raylibtech"
+      //VALUE "OriginalFilename", "cool_project.exe"
+      VALUE "Cool Project", "Cool Project"
+      VALUE "ProductVersion", "1.0"
+    END
+  END
+  BLOCK "VarFileInfo"
+  BEGIN
+	//VALUE "Translation", 0x809, 1252	// English UK
+    VALUE "Translation", 0x409, 1252	// English US
+  END
+END
