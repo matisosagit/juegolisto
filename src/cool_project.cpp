@@ -62,7 +62,7 @@ int main()
     const int ox = 40;
     const int oy = 40;
 
-    auto grid = LoadTextGrid("../assets/levels/level1_base.txt");
+    auto grid = LoadTextGrid("../../assets/niveles/nivel1.txt");
     while (!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(BLACK);
