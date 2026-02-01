@@ -354,7 +354,7 @@
     <ClInclude Include="..\..\..\src\external\raygui.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\cool_project.c" />
+    <ClCompile Include="..\..\..\src\cool_project.cpp" />
     <!--Additional Compile Items-->
     <!--<ClCompile Include="..\..\..\src\extra_module.c" />-->
   </ItemGroup>

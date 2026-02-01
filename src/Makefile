@@ -32,7 +32,7 @@ PLATFORM              ?= PLATFORM_DESKTOP
 PROJECT_NAME          ?= cool_project
 PROJECT_VERSION       ?= 1.0
 PROJECT_BUILD_PATH    ?= .
-PROJECT_SOURCE_FILES  ?= cool_project.c
+PROJECT_SOURCE_FILES  ?= cool_project.cpp Personaje.cpp
 
 RAYLIB_SRC_PATH       ?= C:\raylib\raylib\src
 RAYLIB_INCLUDE_PATH   ?= $(RAYLIB_SRC_PATH)
@@ -308,9 +308,10 @@ ifeq ($(PLATFORM),PLATFORM_DRM)
 endif
 
 
-# Define all object files from source files
+# Define all object files from source files (support .c and .cpp)
 #------------------------------------------------------------------------------------------------
-OBJS = $(patsubst %.c, %.o, $(PROJECT_SOURCE_FILES))
+OBJS = $(PROJECT_SOURCE_FILES:.c=.o)
+OBJS := $(OBJS:.cpp=.o)
 
 # Define processes to execute
 #------------------------------------------------------------------------------------------------
@@ -325,6 +326,9 @@ $(PROJECT_NAME): $(OBJS)
 # Compile source files
 # NOTE: This pattern will compile every module defined on $(OBJS)
 %.o: %.c
+	$(CC) -c $< -o $@ $(CFLAGS) $(INCLUDE_PATHS) -D$(PLATFORM)
+
+%.o: %.cpp
 	$(CC) -c $< -o $@ $(CFLAGS) $(INCLUDE_PATHS) -D$(PLATFORM)
 
 # Clean everything

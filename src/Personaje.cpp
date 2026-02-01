@@ -1,14 +1,12 @@
 #include "Personaje.h"
-Personaje::Personaje() {
-    // Constructor implementation (if needed)
+
+Personaje::Personaje() = default;
+
+Vector2 Personaje::obtenerPosicion() const {
+    return posicion;
 }
 
-void obtenerPosicion(Personaje& p) {
-    return p.posicion;
+void Personaje::mover(float dx, float dy) {
+    posicion.x += dx;
+    posicion.y += dy;
 }
-
-void Personaje::mover(int x, int y) {
-    posicion.x += x;
-    posicion.y += y;
-}
-

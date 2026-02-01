@@ -1,10 +1,18 @@
 #pragma once
 #include "raylib.h"
 
-struct Pos { int x{}, y{}; };
+
+struct Personaje {
+    Personaje();
+    Vector2 posicion{1,1};
+    float speed = 140.0f;
+    float radius = 8.0f;
+    Vector2 obtenerPosicion() const;
+    void mover(float dx, float dy);
+};
 
 struct Player {
-    Vector2 pos{0,0};
+    Vector2 pos{1,1};
     float speed = 140.0f;
     float radius = 8.0f;
 
