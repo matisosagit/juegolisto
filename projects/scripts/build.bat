@@ -7,7 +7,7 @@ cd %~dp0
 :: .
 :: > Compile simple .rc file
 :: ----------------------------
-cmd /c windres ..\..\src\cool_project.rc -o ..\..\src\cool_project.rc.data
+@REM //cmd /c windres ..\..\src\cool_project.rc -o ..\..\src\cool_project
 :: .
 :: > Generating project
 :: --------------------------

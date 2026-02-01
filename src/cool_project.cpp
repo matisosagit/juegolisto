@@ -1,116 +1,80 @@
-/*******************************************************************************************
-*
-*   project_name
-*
-*   This example has been created using raylib 1.0 (www.raylib.com)
-*   raylib is licensed under an unmodified zlib/libpng license (View raylib.h for details)
-*
-*   Copyright (c) 2013-2024 Ramon Santamaria (@raysan5)
-*
-********************************************************************************************/
-
 #include "raylib.h"
-#include "Personaje.h"
-
+#include <vector>
+#include <string>
+#include <fstream>
 #include <iostream>
 
-#if defined(PLATFORM_WEB)
-    #include <emscripten/emscripten.h>
-#endif
-
-//----------------------------------------------------------------------------------
-// Local Variables Definition (local to this module)
-//----------------------------------------------------------------------------------
-Camera camera = { 0 };
-Vector3 cubePosition = { 0 };
-Vector2 personajePosicion = {0, 0};
-
-//----------------------------------------------------------------------------------
-// Local Functions Declaration
-//----------------------------------------------------------------------------------
-static void UpdateDrawFrame(void);          // Update and draw one frame
-
-//----------------------------------------------------------------------------------
-// Main entry point
-//----------------------------------------------------------------------------------
-int main()
+static std::vector<std::string>
+LoadTextGrid(const std::string& path)
 {
-    // Initialization
-    //--------------------------------------------------------------------------------------
-    const int screenWidth = 800;
-    const int screenHeight = 450;
+    std::ifstream f(path);
+    std::vector<std::string> grid;
+    std::string line;
 
-    InitWindow(screenWidth, screenHeight, "raylib - project_name");
-    std::cout << "Welcome to raylib project_name example!" << std::endl;
-    camera.position = (Vector3){ 3.0f, 3.0f, 2.0f };
-    camera.target = (Vector3){ 0.0f, 0.0f, 0.0f };
-    camera.up = (Vector3){ 0.0f, 1.0f, 0.0f };
-    camera.fovy = 60.0f;
-    camera.projection = CAMERA_PERSPECTIVE;
-    Personaje p;
-
-#if defined(PLATFORM_WEB)
-    emscripten_set_main_loop(UpdateDrawFrame, 60, 1);
-#else
-    SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
-    //--------------------------------------------------------------------------------------
-
-    // Main game loop
-    while (!WindowShouldClose())    // Detect window close button or ESC key
-    {
-        UpdateDrawFrame();
+    if (!f.is_open()) {
+        std::cerr << "No se pudo abrir: " << path << "\n";
+        return grid;
     }
-#endif
 
-    // De-Initialization
-    //--------------------------------------------------------------------------------------
-    CloseWindow();                  // Close window and OpenGL context
-    //--------------------------------------------------------------------------------------
-
-    return 0;
+    while (std::getline(f, line)) {
+        if (!line.empty() && line.back() == '\r') line.pop_back();
+        grid.push_back(line);
+    }
+    return grid;
 }
 
-// Update and draw game frame
-static void UpdateDrawFrame(void)
+static void DrawAsciiMap(const
+std::vector<std::string>& grid, int tileSize, int ox, int oy) {
+    for (int y = 0; y < (int)grid.size(); y++) {
+        for (int x = 0; x < (int)grid.size(); x++) {
+            char c =grid[y][x];
+            Rectangle r{ (float)ox + x * tileSize, (float)oy + y * tileSize,
+            (float)tileSize, (float)tileSize };
+            if (c == '#')
+                DrawRectangleRec(r, DARKGRAY);
+            else DrawRectangleRec(r, Color{18,18,18,255});
+                DrawRectangleLinesEx(r, 1, Color{35,35,35,255});
+
+            int cx = (int)(r.x + tileSize * 0.5f);
+            int cy = (int)(r.y + tileSize * 0.5f);
+
+            if (c == 'P')
+            DrawCircle(cx, cy, tileSize * 0.30f, SKYBLUE);
+            if (c == 'E')
+            DrawCircle(cx, cy, tileSize * 0.30f, RED);
+            if (c == 'M')
+            DrawCircle(cx, cy, tileSize * 0.26f, GOLD);
+            if (c == 'S')
+            DrawRectangle((int)r.x+4, (int)r.y+4,tileSize-8, tileSize-8, GREEN);
+        }
+    }
+}
+
+int main()
 {
-    // Update
-    //----------------------------------------------------------------------------------
-    UpdateCamera(&camera, CAMERA_ORBITAL);
-    //----------------------------------------------------------------------------------
+    const int screenWidth = 960;
+    const int screenHeight = 540;
 
-    // Draw
-    //----------------------------------------------------------------------------------
-    BeginDrawing();
+    InitWindow(screenWidth, screenHeight, "MaskMaze - Preview");
+    SetTargetFPS(60);
 
-        ClearBackground(RAYWHITE);
+    const int tileSize = 24;
+    const int ox = 40;
+    const int oy = 40;
 
-        BeginMode3D(camera);
+    auto grid = LoadTextGrid("../assets/levels/level1_base.txt");
+    while (!WindowShouldClose()) {
+        BeginDrawing();
+        ClearBackground(BLACK);
 
-            DrawCube(cubePosition, 2.0f, 2.0f, 2.0f, RED);
-            DrawCubeWires(cubePosition, 2.0f, 2.0f, 2.0f, MAROON);
-            DrawGrid(10, 1.0f);
-
-            DrawCircle(personajePosicion.x, personajePosicion.y, 0.5f, BLUE);
-
-
-        EndMode3D();
-        if (IsKeyDown(KEY_D)){
-            cubePosition.x += 0.2f;
+        if (grid.empty()) {
+            DrawText("No se pudo cargar el mapa. Revisa la ruta.", 40, 40, 20, RED);
+        } else {
+            DrawAsciiMap(grid, tileSize, ox, oy);
+            DrawText("Preview del nivel 1", 40, 10, 18, RAYWHITE);
         }
-        if( IsKeyDown(KEY_A)){
-            cubePosition.x -= 0.2f;
-        }
-        if( IsKeyDown(KEY_W)){
-            cubePosition.z -= 0.2f;
-        }
-        if( IsKeyDown(KEY_S)){
-            cubePosition.z += 0.2f;
-        }
-
-        DrawText("Welcome to raylib basic sample", 10, 40, 20, DARKGRAY);
-
-        DrawFPS(10, 10);
-
-    EndDrawing();
-    //----------------------------------------------------------------------------------
+        EndDrawing();
+    }
+    CloseWindow();
+    return 0;
 }

@@ -1,11 +1,21 @@
+#pragma once
 #include "raylib.h"
 
-class Personaje{
-public:
-    Personaje();
-    void mover(int x, int y);
-    Vector2 obtenerPosicion(Personaje& p) {
-    }
-private:
-    Vector2 posicion = {0, 0};
-}
+struct Pos { int x{}, y{}; };
+
+struct Player {
+    Vector2 pos{0,0};
+    float speed = 140.0f;
+    float radius = 8.0f;
+
+};
+
+enum class EnemyState { Caminar, Perseguir };
+
+struct Enemy {
+    Vector2 pos{0,0};
+    float speed = 110.0f;
+    float radius = 8.0f;
+    EnemyState state = EnemyState::Caminar;
+
+};
