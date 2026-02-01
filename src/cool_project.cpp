@@ -52,20 +52,35 @@ std::vector<std::string>& grid, int tileSize, int ox, int oy) {
 
 int main()
 {
-    const int screenWidth = 960;
-    const int screenHeight = 540;
+    const int screenWidth = 1280;
+    const int screenHeight = 720;
 
     InitWindow(screenWidth, screenHeight, "MaskMaze - Preview");
     SetTargetFPS(60);
-
-    const int tileSize = 24;
-    const int ox = 40;
-    const int oy = 40;
 
     auto grid = LoadTextGrid("../../assets/niveles/nivel1.txt");
     while (!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(BLACK);
+
+            const int margin = 30;
+    
+    int mapH = (int)grid.size();
+    int mapW = mapH ?
+    (int)grid[0].size() : 0;
+
+    if (mapW == 0 || mapH == 0) {
+
+    }
+
+    int tileX = (screenWidth - margin*2) / mapW;
+    int tileY = (screenHeight - margin*2) / mapH;
+    int tileSize = (tileX < tileY) ? tileX : tileY;
+
+    if (tileSize > 40) tileSize = 40;
+
+    int ox = (screenWidth - mapW * tileSize) / 2;
+    int oy = (screenHeight - mapH * tileSize) / 2;
 
         if (grid.empty()) {
             DrawText("No se pudo cargar el mapa. Revisa la ruta.", 40, 40, 20, RED);
@@ -74,6 +89,16 @@ int main()
             DrawText("Preview del nivel 1", 40, 10, 18, RAYWHITE);
         }
         EndDrawing();
+        
+        for (int i = 0; i < (int)grid.size();
+        i++) {
+            if (grid[i].size() != grid[0].size()) {
+                std::cerr << "Fila " << i << "mide " << 
+                grid[i].size()
+                << " pero deberia medir " <<
+                grid[0].size() << "\n";
+            }
+        }
     }
     CloseWindow();
     return 0;
